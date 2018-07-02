@@ -35,6 +35,9 @@ df = df.withColumn("month", month("initialValidDateKey_date"))
 # Let's find the average "cloudHeight" per "month"
 df.groupby("month").agg(avg("cloudHeight")).show()
 
+# How to extract the entries of month 1?
+df.filter(df.month==1).show()
+
 # How to join two DataFrame objects: example
 left = df.select("aerodromeCode","isSpeci")
 right = df.select("aerodromeCode","cloudType")
