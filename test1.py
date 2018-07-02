@@ -5,5 +5,5 @@ spark = SparkSession.builder \
           .appName("Hello World!") \
           .getOrCreate()
 
-df = spark.read.option("header","true").csv("data/titanic_dataset.csv")
+df = spark.read.option("header","true").option("sep",";").csv("data/metarCloudInformation_Facts.csv")
 df.show()

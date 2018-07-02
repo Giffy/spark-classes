@@ -1,0 +1,39 @@
+# sudo pyspark --master local[2]
+
+from pyspark.sql.functions import min, max, avg, col
+from pyspark.sql.functions import unix_timestamp, from_unixtime
+
+df = spark.read.csv("data/metarCloudInformation_Facts.csv")
+
+# Let’s see the data types of the columns
+df.printSchema()
+
+# The numeric variable “cloudHeight” should be casted to Integer
+df = df.withColumn("cloudHeight", df.cloudHeight.cast("Integer"))
+
+# Which is the minimum cloud height?
+df.agg(min(“cloudHeight”)).show()
+
+# Which is the minimum cloud height per cloud quantity group?
+df.groupby(“cloudQuantity”).agg(min(“cloudHeight”)).show()
+
+# Let’s see all possible values in the column “cloudType”
+df.select(“cloudType”).distinct().show()
+
+# Let’s substitute Null values by Unknown
+df = df.fillna(“Unknown”,subset=[“cloudType”])
+
+# Let's convert String date to Datetime object
+df = df.withColumn('initialValidDateKey_date', from_unixtime(unix_timestamp('initialValidDateKey', 'yyyyMMdd')))
+
+# Let's create a new column "Month"
+df = df.withColumn("month", month("initialValidDateKey_date"))
+
+# Let's find the average "cloudHeight" per "month"
+df.groupby("month").agg(avg("cloudHeight")).show()
+
+# How to join two DataFrame objects: example
+left = df.select("aerodromeCode","isSpeci")
+right = df.select("aerodromeCode","cloudType")
+
+left.join(right, on=["aerodromeCode"], how="inner").show()
