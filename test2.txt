@@ -3,7 +3,7 @@
 from pyspark.sql.functions import min, max, avg, col
 from pyspark.sql.functions import unix_timestamp, from_unixtime
 
-df = spark.read.csv("data/metarCloudInformation_Facts.csv")
+df = spark.read.option("header","true").option("sep",";").csv("data/metarCloudInformation_Facts.csv")
 
 # Let’s see the data types of the columns
 df.printSchema()
