@@ -17,6 +17,9 @@ df.agg(min(“cloudHeight”)).show()
 # Which is the minimum cloud height per cloud quantity group?
 df.groupby(“cloudQuantity”).agg(min(“cloudHeight”)).show()
 
+# What is the number of entries per each cloud quantity group?
+df.groupby("cloudQuantity").count().show()
+
 # Let’s see all possible values in the column “cloudType”
 df.select(“cloudType”).distinct().show()
 
